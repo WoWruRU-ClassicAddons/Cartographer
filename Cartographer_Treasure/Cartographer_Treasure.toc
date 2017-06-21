@@ -1,0 +1,18 @@
+## Interface: 11200
+## Title: Cartographer_Treasure |cff7fff7f -Ace2-|r
+## Notes: Treasure mapnotes for Cartographer (based on Cartographer_Mining by kergoth)
+## Notes-ruRU: Заметки сокровищ на картах для картографа (на основе Cartographer_Mining)
+## Notes-deDe: Notizen von Schдtzen fьr Cartographer (basiert auf Cartographer_Mining von kergoth)
+## Notes-esES: Notas de mapa de tesoros para Cartographer (basado en Cartographer_Mining por kergoth)
+## Author: Sal Scotto
+## Version: 1.0
+## X-Category: Map
+## X-eMail: sal.scotto@gmail.com
+## X-License: GPL v2
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## OptionalDeps: Ace2, Babble-2.2
+## RequiredDeps: Cartographer
+## SavedVariables: Cartographer_TreasureDB
+
+Cartographer_Treasure.lua

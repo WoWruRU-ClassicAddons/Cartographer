@@ -6,6 +6,7 @@ Cartographer.date = string.sub("$Date: 2006-12-02 16:07:22 +0300 (Сб, 02 де�
 local Dewdrop = AceLibrary("Dewdrop-2.0")
 
 local L = AceLibrary("AceLocale-2.2"):new("Cartographer")
+Cartographer.L = L
 local BZ = AceLibrary("Babble-Zone-2.2")
 
 BINDING_HEADER_CARTOGRAPHER = "Cartographer"
@@ -22,6 +23,19 @@ L:RegisterTranslations("enUS", function() return {
 	
 	["Azeroth"] = true,
 	["Cosmic map"] = true,
+} end)
+
+L:RegisterTranslations("ruRU", function() return {
+	["Active"] = "Активен",
+	["Suspend/resume this module."] = "Отключить/Запустить данный модуль",
+	
+	["Right-Click on map to zoom out"] = "Правое нажатие по карте - уменьшение масштаба",
+	["Left-Click on map to zoom in"] = "Левое нажатие по карте - увеличение масштаба",
+	
+	["Go to %s"] = "Перейти на %s",
+	
+	["Azeroth"] = "Азерот",
+	["Cosmic map"] = "Карта космоса",
 } end)
 
 L:RegisterTranslations("deDE", function() return {
