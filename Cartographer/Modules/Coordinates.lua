@@ -24,16 +24,16 @@ L:RegisterTranslations("ruRU", function() return {
 } end)
 
 L:RegisterTranslations("deDE", function() return {
---	["Coordinates"] = true,
---	["Module to add coordinates to the bottom of the world map of the player and the cursor."] = true,
+	--    ["Coordinates"] = true,
+	--    ["Module to add coordinates to the bottom of the world map of the player and the cursor."] = true,
 	
 	["Cursor:"] = "Cursor:",
 	["Player:"] = "Spieler:",
 } end)
 
 L:RegisterTranslations("frFR", function() return {
---	["Coordinates"] = true,
---	["Module to add coordinates to the bottom of the world map of the player and the cursor."] = true,
+	--    ["Coordinates"] = true,
+	--    ["Module to add coordinates to the bottom of the world map of the player and the cursor."] = true,
 	
 	["Cursor:"] = "Curseur ",
 	["Player:"] = "Joueur ",
@@ -48,8 +48,8 @@ L:RegisterTranslations("koKR", function() return {
 } end)
 
 L:RegisterTranslations("zhTW", function() return {
---	["Coordinates"] = true,
---	["Module to add coordinates to the bottom of the world map of the player and the cursor."] = true,
+	--    ["Coordinates"] = true,
+	--    ["Module to add coordinates to the bottom of the world map of the player and the cursor."] = true,
 	
 	["Cursor:"] = "指標:",
 	["Player:"] = "玩家:",
@@ -110,7 +110,7 @@ function Cartographer_Coordinates.OnUpdate()
 	self.frame.cursorCoords:SetText(string.format("%s: %.1f, %.1f", L["Cursor:"], 100 * cx, 100 * cy))
 	if px == 0 or py == 0 or IsInInstance() or Cartographer:GetCurrentInstance() then
 		self.frame.playerCoords:SetText("")
-	else
+		else
 		self.frame.playerCoords:SetText(string.format("%s: %.1f, %.1f", L["Player:"], 100 * px, 100 * py))
 	end
 end

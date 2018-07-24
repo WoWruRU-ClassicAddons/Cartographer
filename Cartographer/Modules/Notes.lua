@@ -55,7 +55,7 @@ L:RegisterTranslations("enUS", function() return {
 	["Error: %s sent you a note with an unknown zone: %q"] = true,
 	["Error: %s sent you a note at %q : %.1f, %.1f with the title %q created by %q, but you already have a note at this location."] = true,
 	["%s sent you a note at %q : %.1f, %.1f with the title %q created by %q."] = true,
-
+	
 	["Created by"] = true,
 	
 	["Show note creator"] = true,
@@ -113,7 +113,7 @@ L:RegisterTranslations("ruRU", function() return {
 	["Error: %s sent you a note with an unknown zone: %q"] = "Ошибка: %s посылает вам заметку с неизвестной зоны: %q",
 	["Error: %s sent you a note at %q : %.1f, %.1f with the title %q created by %q, but you already have a note at this location."] = "Ошибка: %s посылает вам заметку %q : %.1f, %.1f с названием %q (создатель %q), однако, у вас уже есть заметка в этом месте.",
 	["%s sent you a note at %q : %.1f, %.1f with the title %q created by %q."] = "%s посылает вам заметку %q : %.2f, %.2f с названием %q (создатель %q).",
-
+	
 	["Created by"] = "Создана ",
 	
 	["Show note creator"] = "Показывать создателя заметки",
@@ -153,8 +153,8 @@ L:RegisterTranslations("koKR", function() return {
 	["Send to guild"] = "길드에 보냄",
 	["Send to player"] = "플레이어에게 보냄",
 	
---	["Note: This may be blocked by Blizzard's spam filter and cause problems. It is recommended to send to your party/raid/guild instead."] = true,
-    
+	--    ["Note: This may be blocked by Blizzard's spam filter and cause problems. It is recommended to send to your party/raid/guild instead."] = true,
+	
 	["X position"] = "X 위치",
 	["Y position"] = "Y 위치",
 	["Title"] = "제목",
@@ -169,14 +169,14 @@ L:RegisterTranslations("koKR", function() return {
 	["%s from Party"] = "파티로부터 %s 받음",
 	
 	["Error: %s sent you a note with an unknown zone: %q"] = "오류: %s|1이;가; 알려지지 않은 지역 노트를 보냈습니다: %q",
---	["Error: %s sent you a note at %q : %.1f, %.1f with the title %q created by %q, but you already have a note at this location."] = true,
---	["%s sent you a note at %q : %.1f, %.1f with the title %q created by %q."] = true,
-
+	--    ["Error: %s sent you a note at %q : %.1f, %.1f with the title %q created by %q, but you already have a note at this location."] = true,
+	--    ["%s sent you a note at %q : %.1f, %.1f with the title %q created by %q."] = true,
+	
 	["Created by"] = "작성자",
 	
 	["Show note creator"] = "작성자 보기",
 	["Show the `Created By:' line in notes"] = "노트에 '작성자:' 를 표시합니다.",
-
+	
 	["Icon size"] = "아이콘 크기",
 	["Size of the icons on the map"] = "노트의 아이콘 크기를 변경합니다.",
 } end)
@@ -185,9 +185,9 @@ local icons = {}
 local function getIconTitle(icon)
 	if icons[icon] then
 		return icons[icon].text
-	elseif string.find(icon, "^Interface\\") then
+		elseif string.find(icon, "^Interface\\") then
 		return L["Custom icon"]
-	else
+		else
 		return icon
 	end
 end
@@ -205,7 +205,7 @@ local lua51 = loadstring("return function(...) return ... end") and true or fals
 local table_setn = lua51 and function() end or table.setn
 
 local function round(num, digits)
-    -- banker's rounding
+	-- banker's rounding
 	local mantissa = 10^digits
 	local norm = num*mantissa
 	norm = norm + 0.5
@@ -227,7 +227,7 @@ local function GetCursorMapLocation(button)
 end
 
 local function getID(x, y)
-    return round(x*1000, 0) + round(y*1000, 0)*1001
+	return round(x*1000, 0) + round(y*1000, 0)*1001
 end
 
 local function getXY(id)
@@ -276,7 +276,7 @@ function Cartographer_Notes:RegisterIcon(name, data)
 			data.cRight = 0.95
 			data.cTop = 0.05
 			data.cBottom = 0.95
-		else
+			else
 			data.cLeft = 0
 			data.cRight = 1
 			data.cTop = 0
@@ -433,8 +433,8 @@ function Cartographer_Notes:OnInitialize()
 				name = L["Icon size"],
 				desc = L["Size of the icons on the map"],
 				type = 'range',
-				min = 0.5,
-				max = 2,
+				min = 0.05, -- was 0.5
+				max = 5, -- was 2
 				step = 0.05,
 				isPercent = true,
 				get = "GetIconSize",
@@ -465,7 +465,7 @@ function Cartographer_Notes:OnEnable()
 	self:RegisterEvent("Cartographer_SetCurrentInstance", function() self:RefreshMap(false) end)
 	if Cartographer:GetInstanceWorldMapButton() then
 		self:HookScript(Cartographer:GetInstanceWorldMapButton(), "OnClick", "InstanceWorldMapButton_OnClick")
-	else
+		else
 		self:RegisterEvent("Cartographer_RegisterInstanceWorldMapButton", function(frame)
 			self:HookScript(frame, "OnClick", "InstanceWorldMapButton_OnClick")
 		end)
@@ -619,10 +619,10 @@ function Cartographer_Notes:MapButton_OnClick(mouseButton, button)
 		lastCursorX, lastCursorY = GetCursorMapLocation(button)
 		if button == WorldMapFrame then
 			Dewdrop:Open(button)
-		else
+			else
 			Dewdrop:Open(button, WorldMapFrame)
 		end
-	else
+		else
 		local x, y = GetCursorMapLocation(button)
 		self:SetNote(Cartographer:GetCurrentEnglishZoneName(), x, y, "Triangle", self.developing)
 	end
@@ -696,7 +696,7 @@ local function GetNoteDialog()
 	local OnTextChanged = function()
 		if isGood() then
 			okayButton:Enable()
-		else
+			else
 			okayButton:Disable()
 		end
 	end
@@ -708,14 +708,14 @@ local function GetNoteDialog()
 		editBox:SetHeight(13)
 		if not last then
 			editBox:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -25, -35)
-		else
+			else
 			editBox:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -20)
 		end
 		last = editBox
 		editBox:SetAutoFocus(false)
 		editBox:SetScript("OnEscapePressed", OnEscapePressed)
 		editBox:SetScript("OnTextChanged", OnTextChanged)
-
+		
 		local left = editBox:CreateTexture(nil, "BACKGROUND")
 		left:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorder-Left")
 		left:SetTexCoord(0, 100 / 256, 0, 1)
@@ -888,7 +888,7 @@ local function GetNoteDialog()
 				button:SetScript("OnClick", function()
 					if Dewdrop:IsOpen(button) then
 						Dewdrop:Close()
-					else
+						else
 						Dewdrop:Open(button)
 					end
 					PlaySound("igMainMenuOptionCheckBoxOn")
@@ -942,13 +942,13 @@ local function GetNoteDialog()
 		local x = tonumber(frame.xEditBox:GetText())
 		if not x then
 			return false
-		elseif x < 0 or x > 100 then
+			elseif x < 0 or x > 100 then
 			return false
 		end
 		local y = tonumber(frame.yEditBox:GetText())
 		if not y then
 			return false
-		elseif y < 0 or y > 100 then
+			elseif y < 0 or y > 100 then
 			return false
 		end
 		return true
@@ -1014,7 +1014,7 @@ local function GetNoteDialog()
 			image:SetTexture(k)
 			if string.find(k, "^Interface\\Icons\\") then
 				image:SetTexCoord(0.05, 0.95, 0.05, 0.95)
-			else
+				else
 				image:SetTexCoord(0, 1, 0, 1)
 			end
 			Dewdrop:Close()
@@ -1079,7 +1079,7 @@ local function GetNoteDialog()
 		button:SetScript("OnClick", function()
 			if Dewdrop:IsOpen(icon) then
 				Dewdrop:Close()
-			else
+				else
 				Dewdrop:Open(icon)
 			end
 			PlaySound("igMainMenuOptionCheckBoxOn")
@@ -1112,7 +1112,7 @@ local function GetNoteDialog()
 			'info2G', g3,
 			'info2B', b3,
 			'manual', true,
-			'oldId', frame.id)
+		'oldId', frame.id)
 		frame:Hide()
 	end)
 	
@@ -1171,7 +1171,7 @@ function Cartographer_Notes:ShowEditDialog(zone, x, y)
 	if not y then
 		id = x
 		AceLibrary.argCheck(self, x, 3, "number")
-	else
+		else
 		AceLibrary.argCheck(self, x, 3, "number")
 		AceLibrary.argCheck(self, y, 4, "number")
 		if x < 0 or x > 1 then
@@ -1203,7 +1203,7 @@ function Cartographer_Notes:ShowEditDialog(zone, x, y)
 		frame.info2.resetColor(data.info2R or 1, data.info2G or 1, data.info2B or 1)
 		frame.creator:SetText(db or data.creator or "")
 		frame.iconSelector(data.icon)
-	else
+		else
 		frame.title:SetText(getIconTitle(data))
 		frame.title.resetColor(1, 1, 1)
 		frame.info1:SetText("")
@@ -1251,7 +1251,7 @@ do
 		texture:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
 		texture:SetTexCoord(0, 0.25, 0, 0.25)
 		
-		frame:SetFrameLevel(frame:GetFrameLevel()+3)
+		frame:SetFrameLevel(9); -- WHDB related. Normal note FrameLevel.
 		frame:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 		if not OnMouseDown then
 			OnMouseDown = function()
@@ -1284,16 +1284,16 @@ do
               x, y = round(x, 3), round(y, 3)
               if x > 1 then
                 x = 1
-              end
+							end
               if x < 0 then
                 x = 0
-              end
+							end
               if y > 1 then
                 y = 1
-              end
+							end
               if y < 0 then
                 y = 0
-              end
+							end
               local id = getID(x, y)
               if id ~= this.id then
                 pois[id] = pois[this.id]
@@ -1304,15 +1304,15 @@ do
                   v[this.zone][id] = t
                   v[this.zone][this.id] = nil
                   self:ShowNote(this.zone, id, db)
-                else
+									else
                   self.db.account.pois[this.zone][id] = t
                   self.db.account.pois[this.zone][this.id] = nil
                   self:ShowNote(this.zone, id, t.creator or "")
-                end
-              end
-            end
-          end
-        end
+								end
+							end
+						end
+					end
+				end
 			end
 		end
 		frame:SetScript("OnMouseUp", OnMouseUp)
@@ -1328,7 +1328,7 @@ do
 				local anchor = ""
 				if x > x2 then
 					anchor = "ANCHOR_LEFT"
-				else
+					else
 					anchor = "ANCHOR_RIGHT"
 				end
 				
@@ -1343,6 +1343,7 @@ do
 				if this.creator then
 					WorldMapTooltip:AddDoubleLine(L["Created by"], this.creator)
 				end
+				WorldMapTooltip:SetFrameLevel(12); -- WHDB related. Tooltips > All Notes.
 				WorldMapTooltip:Show()
 			end
 		end
@@ -1363,7 +1364,7 @@ do
 					if self.handlers[this.creator] and type(self.handlers[this.creator].OnNoteClick) == "function" then
 						self.handlers[this.creator]:OnNoteClick(this.zone, this.id)
 					end
-				elseif arg1 == "RightButton" then
+					elseif arg1 == "RightButton" then
 					if not dummy then
 						dummy = CreateFrame("Frame")
 						local function editNoteFunc()
@@ -1397,13 +1398,33 @@ do
 							'children', function(level, value, level2, level3, level4)
 								if self.handlers[poi.creator] and type(self.handlers[poi.creator].OnNoteMenuRequest) == "function" then
 									self.handlers[poi.creator]:OnNoteMenuRequest(poi.zone, poi.id, level, value, level2, level3, level4)
-								else
+									else
 									if level == 1 then
 										if poi.manual then
 											Dewdrop:AddLine(
 												'text', L["Edit note"],
 												'func', editNoteFunc
 											)
+										end
+										if poi.creator == 'ClassicDB' then
+											local quests = {};
+											local i = 0;
+											local j = 0;
+											while true do
+												i, j = string.find(poi.info, 'ID: %d+', i+1);
+												if i == nil then break; end
+												table.insert(quests, tonumber(string.sub(poi.info, i+4, j)));
+												CdbDebugPrint(4, string.sub(poi.info, i+4, j));
+											end
+											for k, v in pairs(quests) do
+												Dewdrop:AddLine(
+													'text', "Finish quest '"..qData[v][1].."' ("..v..")",
+													'func', function (val)
+														CdbMarkQuestAsFinished(val)
+													end,
+													'arg1', v
+												)
+											end
 										end
 										Dewdrop:AddLine(
 											'text', L["Delete note"],
@@ -1420,7 +1441,7 @@ do
 											'text', CANCEL,
 											'func', closeFunc
 										)
-									elseif level == 2 then
+										elseif level == 2 then
 										if value == 'send' then
 											local bit = false
 											if GetNumPartyMembers() > 0 then
@@ -1470,7 +1491,7 @@ do
 					if Dewdrop:IsOpen(poi) then
 						Dewdrop:Close()
 						poi:GetScript("OnEnter")(poi)
-					else
+						else
 						Dewdrop:Open(poi, dummy)
 						Tablet:Close()
 					end
@@ -1497,7 +1518,7 @@ do
 		if x then
 			delpoi(x)
 		end
-	end }, { __index = function(self, id)
+		end }, { __index = function(self, id)
 		local frame = newpoi()
 		rawset(self, id, frame)
 		return frame
@@ -1514,7 +1535,7 @@ function Cartographer_Notes:SetNote(zone, x, y, icon, creator, k1, v1, k2, v2, k
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -1543,7 +1564,7 @@ function Cartographer_Notes:SetNote(zone, x, y, icon, creator, k1, v1, k2, v2, k
 	end
 	if not k1 and usingDB then
 		zoneData[id] = icon
-	else
+		else
 		local t
 		if not zoneData[id] then
 			zoneData[id] = {}
@@ -1554,30 +1575,30 @@ function Cartographer_Notes:SetNote(zone, x, y, icon, creator, k1, v1, k2, v2, k
 		end
 		if type(k1) ~= "table" then
 			if k1 then t[k1] = v1
-			if k2 then t[k2] = v2
-			if k3 then t[k3] = v3
-			if k4 then t[k4] = v4
-			if k5 then t[k5] = v5
-			if k6 then t[k6] = v6
-			if k7 then t[k7] = v7
-			if k8 then t[k8] = v8
-			if k9 then t[k9] = v9
-			if k10 then t[k10] = v10
-			if k11 then t[k11] = v11
-			if k12 then t[k12] = v12
-			if k13 then t[k13] = v13
-			if k14 then t[k14] = v14
-			if k15 then t[k15] = v15
-			if k16 then t[k16] = v16
-			if k17 then t[k17] = v17
-			if k18 then t[k18] = v18
-			if k19 then t[k19] = v19
-			if k20 then t[k20] = v20
-			end end end end end end end end end end end end end end end end end end end end
-		else
-			for k,v in pairs(k1) do
-				t[k] = v
-			end
+				if k2 then t[k2] = v2
+					if k3 then t[k3] = v3
+						if k4 then t[k4] = v4
+							if k5 then t[k5] = v5
+								if k6 then t[k6] = v6
+									if k7 then t[k7] = v7
+										if k8 then t[k8] = v8
+											if k9 then t[k9] = v9
+												if k10 then t[k10] = v10
+													if k11 then t[k11] = v11
+														if k12 then t[k12] = v12
+															if k13 then t[k13] = v13
+																if k14 then t[k14] = v14
+																	if k15 then t[k15] = v15
+																		if k16 then t[k16] = v16
+																			if k17 then t[k17] = v17
+																				if k18 then t[k18] = v18
+																					if k19 then t[k19] = v19
+																						if k20 then t[k20] = v20
+																						end end end end end end end end end end end end end end end end end end end end
+																						else
+																						for k,v in pairs(k1) do
+																							t[k] = v
+																						end
 		end
 		t.icon = icon
 		if not usingDB then
@@ -1654,9 +1675,9 @@ function Cartographer_Notes:SetNote(zone, x, y, icon, creator, k1, v1, k2, v2, k
 	local newData = zoneData[id]
 	if type(oldData) ~= type(newData) then
 		different = true
-	elseif type(oldData) ~= "table" then
+		elseif type(oldData) ~= "table" then
 		different = oldData ~= newData
-	else
+		else
 		for k,v in pairs(oldData) do
 			if newData[k] ~= v then
 				different = true
@@ -1688,7 +1709,7 @@ end
 local d = tonumber(date("%Y%m%d"))
 if d < 20061204 then
 	Cartographer_Notes.SetCustomNote = Cartographer_Notes.SetNote
-else
+	else
 	function Cartographer_Notes:SetCustomNote(zone, x, y, icon, creator, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10, k11, v11, k12, v12, k13, v13, k14, v14, k15, v15, k16, v16, k17, v17, k18, v18, k19, v19, k20, v20)
 		local error = error
 		if d < 20061211 then
@@ -1706,7 +1727,7 @@ function Cartographer_Notes:GetNote(zone, x, y)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to get a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -1732,7 +1753,7 @@ function Cartographer_Notes:DeleteNote(zone, x, y)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to destroy a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -1747,7 +1768,7 @@ function Cartographer_Notes:DeleteNote(zone, x, y)
 	local id
 	if not y then
 		id = x
-	else
+		else
 		id = getID(x, y)
 	end
 	local t, db = getrawpoi(zone, id)
@@ -1756,7 +1777,7 @@ function Cartographer_Notes:DeleteNote(zone, x, y)
 	end
 	if db then
 		self.externalDBs[db][zone][id] = nil
-	else
+		else
 		self.db.account.pois[zone][id] = nil
 	end
 	local icon = t
@@ -1800,7 +1821,7 @@ function Cartographer_Notes:ShowNote(zone, id, creator)
 		poi.icon = data
 		poi.manual = false
 		icon = data
-	else
+		else
 		poi.title = data.title or getIconTitle(data.icon)
 		poi.titleR = data.titleR or 1
 		poi.titleG = data.titleG or 1
@@ -1833,10 +1854,10 @@ function Cartographer_Notes:ShowNote(zone, id, creator)
 		poi.texture:SetTexture(icon)
 		if string.find(icon, "^Interface\\Icons\\") then
 			poi.texture:SetTexCoord(0.05, 0.95, 0.05, 0.95)
-		else
+			else
 			poi.texture:SetTexCoord(0, 1, 0, 1)
 		end
-	else
+		else
 		local t = icons[icon]
 		if not t then
 			t = icons.Unknown
@@ -1844,6 +1865,7 @@ function Cartographer_Notes:ShowNote(zone, id, creator)
 		poi:SetWidth(t.width*self.db.profile.iconSize)
 		poi:SetHeight(t.height*self.db.profile.iconSize)
 		poi:SetAlpha(t.alpha)
+		if icon == "CdbQuestionMark" or icon == "quest" then poi:SetFrameLevel(10); end -- WHDB related. Quest End > Normal notes.
 		poi.texture:SetTexture(t.path)
 		poi.texture:SetTexCoord(t.cLeft, t.cRight, t.cTop, t.cBottom)
 	end
@@ -2020,7 +2042,7 @@ function Cartographer_Notes:SendNoteToPlayer(zone, x, y, player)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -2062,7 +2084,7 @@ function Cartographer_Notes:SendNoteToGuild(zone, x, y)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -2085,7 +2107,7 @@ function Cartographer_Notes:SendNoteToParty(zone, x, y)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -2108,7 +2130,7 @@ function Cartographer_Notes:SendNoteToRaid(zone, x, y)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -2131,7 +2153,7 @@ function Cartographer_Notes:SendNoteToGroup(zone, x, y)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -2143,7 +2165,7 @@ function Cartographer_Notes:SendNoteToGroup(zone, x, y)
 	end
 	if GetNumRaidMembers() > 0 then
 		return self:SendNoteToRaid(zone, x, y)
-	elseif GetNumPartyMembers() > 0 then
+		elseif GetNumPartyMembers() > 0 then
 		return self:SendNoteToParty(zone, x, y)
 	end
 	return false
@@ -2223,7 +2245,7 @@ function Cartographer_Notes:IterateNearbyNotes(zone, x, y, radius, creator, max_
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end
@@ -2292,7 +2314,7 @@ function Cartographer_Notes:GetNearbyNote(zone, x, y, radius, creator)
 	if not BZ:HasTranslation(zone) then
 		if BZ:HasReverseTranslation(zone) then
 			zone = BZ:GetReverseTranslation(zone)
-		else
+			else
 			error(string.format("Trying to set a note with an unknown zone: %q", zone), 2)
 		end
 	end

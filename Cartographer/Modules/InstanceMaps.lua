@@ -22,13 +22,13 @@ L:RegisterTranslations("ruRU", function() return {
 } end)
 
 L:RegisterTranslations("deDE", function() return {
---	["Instance Maps"] = true,
---	["Module which provides maps of instances."] = true,
+	--    ["Instance Maps"] = true,
+	--    ["Module which provides maps of instances."] = true,
 } end)
 
 L:RegisterTranslations("frFR", function() return {
---	["Instance Maps"] = true,
---	["Module which provides maps of instances."] = true,
+	--    ["Instance Maps"] = true,
+	--    ["Module which provides maps of instances."] = true,
 } end)
 
 L:RegisterTranslations("koKR", function() return {
@@ -39,13 +39,13 @@ L:RegisterTranslations("koKR", function() return {
 } end)
 
 L:RegisterTranslations("zhTW", function() return {
---	["Instance Maps"] = true,
---	["Module which provides maps of instances."] = true,
+	--    ["Instance Maps"] = true,
+	--    ["Module which provides maps of instances."] = true,
 } end)
 
 L:RegisterTranslations("zhCN", function() return {
---	["Instance Maps"] = true,
---	["Module which provides maps of instances."] = true,
+	--    ["Instance Maps"] = true,
+	--    ["Module which provides maps of instances."] = true,
 } end)
 
 Cartographer_InstanceMaps = Cartographer:NewModule("InstanceMaps", "AceHook-2.1")
@@ -147,7 +147,7 @@ function Cartographer_InstanceMaps:SetMapToCurrentZone()
 	end
 	if IsInInstance() and BZ:HasReverseTranslation(zoneText) and instanceToTexture[BZ:GetReverseTranslation(zoneText)] then
 		self:ShowInstance(BZ:GetReverseTranslation(zoneText))
-	else
+		else
 		self:HideInstanceFrame()
 		return self.hooks.SetMapToCurrentZone()
 	end
@@ -166,11 +166,11 @@ function Cartographer_InstanceMaps:ShowInstanceFrame()
 				local zone = BZ[Cartographer:GetCurrentInstance()]
 				if Tourist:IsInKalimdor(zone) then
 					SetMapZoom(1)
-				elseif Tourist:IsInEasternKingdoms(zone) then
+					elseif Tourist:IsInEasternKingdoms(zone) then
 					SetMapZoom(2)
-				elseif Tourist:IsInOutland(zone) then
+					elseif Tourist:IsInOutland(zone) then
 					SetMapZoom(3)
-				else
+					else
 					SetMapZoom(0)
 				end
 			end
@@ -225,9 +225,9 @@ Cartographer_InstanceMaps.WorldMapFrame_LoadContinents = lua51 and loadstring([[
 	info.func = Cartographer_InstanceMaps.instance_func
 	info.checked = nil
 	UIDropDownMenu_AddButton(info)
-end]])() or loadstring([[local L = AceLibrary("AceLocale-2.2"):new("Cartographer-InstanceMaps"); return function(self, ...)
+	end]])() or loadstring([[local L = AceLibrary("AceLocale-2.2"):new("Cartographer-InstanceMaps"); return function(self, ...)
 	while arg[arg.n] == nil do
-		arg.n = arg.n - 1
+	arg.n = arg.n - 1
 	end
 	self.hooks.WorldMapFrame_LoadContinents(unpack(arg))
 	local info = UIDropDownMenu_CreateInfo()
@@ -239,12 +239,12 @@ end]])()
 
 Cartographer_InstanceMaps.WorldMapFrame_LoadZones = lua51 and loadstring([[return function(self, ...)
 	if UIDropDownMenu_GetSelectedID(WorldMapContinentDropDown) ~= self.instances_id then
-		return self.hooks.WorldMapFrame_LoadZones(...)
+	return self.hooks.WorldMapFrame_LoadZones(...)
 	end
 	self:LoadInstancesToDropDown()
-end]])() or loadstring([[return function(self, ...)
+	end]])() or loadstring([[return function(self, ...)
 	if UIDropDownMenu_GetSelectedID(WorldMapContinentDropDown) ~= self.instances_id then
-		return self.hooks.WorldMapFrame_LoadZones(unpack(arg))
+	return self.hooks.WorldMapFrame_LoadZones(unpack(arg))
 	end
 	self:LoadInstancesToDropDown()
 end]])()
@@ -257,11 +257,11 @@ function Cartographer_InstanceMaps:ShowInstance(realZone)
 	local zone = BZ[realZone]
 	if Tourist:IsInKalimdor(zone) then
 		SetMapZoom(1, 1)
-	elseif Tourist:IsInEasternKingdoms(zone) then
+		elseif Tourist:IsInEasternKingdoms(zone) then
 		SetMapZoom(2, 1)
-	elseif Tourist:IsInOutland(zone) then
+		elseif Tourist:IsInOutland(zone) then
 		SetMapZoom(3, 1)
-	else
+		else
 		SetMapZoom(0)
 	end
 	Cartographer_InstanceMaps:ShowInstanceFrame()

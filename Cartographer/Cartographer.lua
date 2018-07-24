@@ -6,7 +6,6 @@ Cartographer.date = string.sub("$Date: 2006-12-02 16:07:22 +0300 (Сб, 02 де�
 local Dewdrop = AceLibrary("Dewdrop-2.0")
 
 local L = AceLibrary("AceLocale-2.2"):new("Cartographer")
-Cartographer.L = L
 local BZ = AceLibrary("Babble-Zone-2.2")
 
 BINDING_HEADER_CARTOGRAPHER = "Cartographer"
@@ -39,13 +38,13 @@ L:RegisterTranslations("ruRU", function() return {
 } end)
 
 L:RegisterTranslations("deDE", function() return {
---	["Toggle"] = true,
---	["Toggle the module on and off."] = true,
+	--    ["Toggle"] = true,
+	--    ["Toggle the module on and off."] = true,
 } end)
 
 L:RegisterTranslations("frFR", function() return {
---	["Toggle"] = true,
---	["Toggle the module on and off."] = true,
+	--    ["Toggle"] = true,
+	--    ["Toggle the module on and off."] = true,
 } end)
 
 L:RegisterTranslations("koKR", function() return {
@@ -62,13 +61,13 @@ L:RegisterTranslations("koKR", function() return {
 } end)
 
 L:RegisterTranslations("zhCN", function() return {
---	["Toggle"] = true,
---	["Toggle the module on and off."] = true,
+	--    ["Toggle"] = true,
+	--    ["Toggle the module on and off."] = true,
 } end)
 
 L:RegisterTranslations("zhTW", function() return {
---	["Toggle"] = true,
---	["Toggle the module on and off."] = true,
+	--    ["Toggle"] = true,
+	--    ["Toggle the module on and off."] = true,
 } end)
 
 Cartographer:RegisterDB("CartographerDB")
@@ -148,7 +147,7 @@ function Cartographer:OnEnable()
 		this:SetScript("OnClick", function()
 			if Dewdrop:IsOpen(this) then
 				Dewdrop:Close()
-			else
+				else
 				Dewdrop:Open(this)
 			end
 		end)
@@ -175,7 +174,7 @@ function Cartographer:OnEnable()
 		this:SetScript("OnClick", function()
 			if Dewdrop:IsOpen(this) then
 				Dewdrop:Close()
-			else
+				else
 				Dewdrop:Open(this)
 			end
 		end)
@@ -228,7 +227,7 @@ function Cartographer:Cartographer_ChangeZone(zone, localZone)
 		CartographerGoToButton:SetText(localZone)
 		Cartographer.gotoOptions.args.player.name = string.format(L["Go to %s"], GetRealZoneText())
 		Cartographer.gotoOptions.args.player.desc = Cartographer.gotoOptions.args.player.name
-	else
+		else
 		CartographerGoToButton:SetText(continents[GetCurrentMapContinent()] or UNKNOWN)
 	end
 end
@@ -302,15 +301,15 @@ function Cartographer:GetCurrentLocalizedZoneName()
 	local z = mapZones[GetCurrentMapContinent()][GetCurrentMapZone()]
 	if z then
 		return z
-	else
+		else
 		local map = GetMapInfo()
 		if map == "WarsongGulch" then
 			return BZ["Warsong Gulch"]
-		elseif map == "ArathiBasin" then
+			elseif map == "ArathiBasin" then
 			return BZ["Arathi Basin"]
-		elseif map == "AlteracValley" then
+			elseif map == "AlteracValley" then
 			return BZ["Alterac Valley"]
-		elseif map == "NetherstormArena" then
+			elseif map == "NetherstormArena" then
 			return BZ["Eye of the Storm"]
 		end
 		return nil
@@ -324,15 +323,15 @@ function Cartographer:GetCurrentEnglishZoneName()
 	local z = mapZones[GetCurrentMapContinent()][GetCurrentMapZone()]
 	if z then
 		return BZ:GetReverseTranslation(z)
-	else
+		else
 		local map = GetMapInfo()
 		if map == "WarsongGulch" then
 			return "Warsong Gulch"
-		elseif map == "ArathiBasin" then
+			elseif map == "ArathiBasin" then
 			return "Arathi Basin"
-		elseif map == "AlteracValley" then
+			elseif map == "AlteracValley" then
 			return "Alterac Valley"
-		elseif map == "NetherstormArena" then
+			elseif map == "NetherstormArena" then
 			return "Eye of the Storm"
 		end
 		return nil

@@ -18,13 +18,13 @@ L:RegisterTranslations("ruRU", function() return {
 } end)
 
 L:RegisterTranslations("deDE", function() return {
---	["Group Colors"] = true,
---	["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
+	--    ["Group Colors"] = true,
+	--    ["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
 } end)
 
 L:RegisterTranslations("frFR", function() return {
---	["Group Colors"] = true,
---	["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
+	--    ["Group Colors"] = true,
+	--    ["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
 } end)
 
 L:RegisterTranslations("koKR", function() return {
@@ -33,13 +33,13 @@ L:RegisterTranslations("koKR", function() return {
 } end)
 
 L:RegisterTranslations("zhCN", function() return {
---	["Group Colors"] = true,
---	["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
+	--    ["Group Colors"] = true,
+	--    ["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
 } end)
 
 L:RegisterTranslations("zhTW", function() return {
---	["Group Colors"] = true,
---	["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
+	--    ["Group Colors"] = true,
+	--    ["Module which turns all your party's and your raid's POIs into circles colored based on class, and shows a number on them based on their raid group."] = true,
 } end)
 
 Cartographer_GroupColors = Cartographer:NewModule("GroupColors", "AceEvent-2.0")
@@ -74,7 +74,7 @@ function Cartographer_GroupColors:OnEnable()
 	self:RegisterEvent("WORLD_MAP_UPDATE", function()
 		if GetNumRaidMembers() > 0 then
 			self:ScheduleRepeatingEvent("Cartographer_GroupColors", self.Update, 0.5, self)
-		else
+			else
 			self:Update()
 		end
 	end)
@@ -113,12 +113,12 @@ function Cartographer_GroupColors:Update()
 				local t = RAID_CLASS_COLORS[fileName]
 				if t then
 					tex:SetVertexColor(t.r, t.g, t.b)
-				else
+					else
 					tex:SetVertexColor(0.8, 0.8, 0.8)
 				end
 			end
 		end
-	else
+		else
 		for i = 1, GetNumPartyMembers() do
 			local _,fileName = UnitClass("party" .. i)
 			local tex = _G["WorldMapParty" .. i .. "Icon"]

@@ -116,7 +116,7 @@ function Cartographer_ZoneInfo.OnUpdate()
 		if not underAttack then
 			WorldMapFrameAreaLabel:SetTextColor(Tourist:GetFactionColor(zone))
 			WorldMapFrameAreaDescription:SetTextColor(1, 1, 1)
-		else
+			else
 			WorldMapFrameAreaLabel:SetTextColor(1, 1, 1)
 			WorldMapFrameAreaDescription:SetTextColor(Tourist:GetFactionColor(zone))
 		end
@@ -126,7 +126,7 @@ function Cartographer_ZoneInfo.OnUpdate()
 			local levelText
 			if low == high then
 				levelText = string.format(" |cff%02x%02x%02x[%d]|r", r * 255, g * 255, b * 255, high)
-			else
+				else
 				levelText = string.format(" |cff%02x%02x%02x[%d-%d]|r", r * 255, g * 255, b * 255, low, high)
 			end
 			local groupSize = Tourist:GetInstanceGroupSize(zone)
@@ -136,7 +136,7 @@ function Cartographer_ZoneInfo.OnUpdate()
 			end
 			if not underAttack then
 				WorldMapFrameAreaLabel:SetText(string.gsub(WorldMapFrameAreaLabel:GetText(), " |cff.+$", "") .. levelText .. sizeText)
-			else
+				else
 				WorldMapFrameAreaDescription:SetText(string.gsub(WorldMapFrameAreaDescription:GetText(), " |cff.+$", "") .. levelText .. sizeText)
 			end
 		end
@@ -153,13 +153,13 @@ function Cartographer_ZoneInfo.OnUpdate()
 					if low == high then
 						if groupSize > 0 then
 							table.insert(t, string.format("|cff%02x%02x%02x%s|r |cff%02x%02x%02x[%d]|r " .. L["%d-man"], r1 * 255, g1 * 255, b1 * 255, instance, r2 * 255, g2 * 255, b2 * 255, high, groupSize))
-						else
+							else
 							table.insert(t, string.format("|cff%02x%02x%02x%s|r |cff%02x%02x%02x[%d]|r", r1 * 255, g1 * 255, b1 * 255, instance, r2 * 255, g2 * 255, b2 * 255, high))
 						end
-					else
+						else
 						if groupSize > 0 then
 							table.insert(t, string.format("|cff%02x%02x%02x%s|r |cff%02x%02x%02x[%d-%d]|r " .. L["%d-man"], r1 * 255, g1 * 255, b1 * 255, instance, r2 * 255, g2 * 255, b2 * 255, low, high, groupSize))
-						else
+							else
 							table.insert(t, string.format("|cff%02x%02x%02x%s|r |cff%02x%02x%02x[%d-%d]|r", r1 * 255, g1 * 255, b1 * 255, instance, r2 * 255, g2 * 255, b2 * 255, low, high))
 						end
 					end
@@ -170,11 +170,11 @@ function Cartographer_ZoneInfo.OnUpdate()
 				end
 				table_setn(t, 0)
 			end
-		else
+			else
 			lastZone = nil
 			self.frame.text:SetText("")
 		end
-	elseif not zone then
+		elseif not zone then
 		lastZone = nil
 		self.frame.text:SetText("")
 	end

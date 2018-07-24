@@ -9,21 +9,21 @@ local bs = AceLibrary("Babble-Spell-2.2")
 local L = AceLibrary("AceLocale-2.2"):new("Cartographer_Professions")
 L:RegisterTranslations("enUS", function() return {
 	["Professions"] = true,
-
+	
 	["Stub for loading Cartographer module addons based on your professions."] = true,
 	["Unable to load addon `%s': %s"] = true,
 } end)
 
 L:RegisterTranslations("ruRU", function() return {
 	["Professions"] = "Профессии",
-
+	
 	["Stub for loading Cartographer module addons based on your professions."] = "Заглушка для загрузки модулей Картографа, основанная на ваших профессиях",
 	["Unable to load addon `%s': %s"] = "Невозможно загрузить аддон `%s': %s",
 } end)
 
 L:RegisterTranslations("koKR", function() return {
 	["Professions"] = "전문 기술",
-
+	
 	["Stub for loading Cartographer module addons based on your professions."] = "당신의 직업에 기초를 둔 Cartographer 모듈 애드온을 불려옵니다.",
 	["Unable to load addon `%s': %s"] = "%s 애드온 로드 실패: %s",
 } end)
@@ -38,7 +38,7 @@ function mod:OnInitialize()
 	self.email   = 'clarson@kergoth.com'
 	self.website = nil
 	self.version = nil
-
+	
 	local opts = {
 		name = L["Professions"],
 		desc = L["Stub for loading Cartographer module addons based on your professions."],
@@ -57,7 +57,7 @@ function mod:OnInitialize()
 	}
 	self:RegisterChatCommand({'/cartprof'}, opts)
 	Cartographer.options.args.Professions = opts
-
+	
 	self.addons = {}
 end
 
@@ -74,7 +74,7 @@ function mod:SKILL_LINES_CHANGED()
 			skills[skillname] = true
 		end
 	end
-
+	
 	for n=1,GetNumAddOns() do
 		local name, title, notes, enabled, loadable, reason, security = GetAddOnInfo(n)
 		local pipometa = GetAddOnMetadata(n, 'X-Cartographer-Prof')
@@ -88,14 +88,14 @@ function mod:SKILL_LINES_CHANGED()
 								self:Print(L["Unable to load addon `%s': %s"], name, reason)
 							end
 						end
-					elseif self.addons[skillname] then
+						elseif self.addons[skillname] then
 						Cartographer:ToggleModuleActive(self.addons[skillname], true)
 					end
 				end
 			end
 		end
 	end
-
+	
 	for k,v in pairs(self.addons) do
 		if not skills[k] then
 			Cartographer:ToggleModuleActive(v, false)

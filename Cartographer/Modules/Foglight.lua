@@ -46,13 +46,13 @@ function Cartographer_Foglight:OnInitialize()
 	ColorPickerFrame:SetFrameStrata("DIALOG")
 	self.name = L["Foglight"]
 	self.title = L["Foglight"]
-    self.db = Cartographer:AcquireDBNamespace("Foglight")
-    Cartographer:RegisterDefaults("Foglight", "profile", {
+	self.db = Cartographer:AcquireDBNamespace("Foglight")
+	Cartographer:RegisterDefaults("Foglight", "profile", {
 		darkR = 1,
 		darkG = 1,
 		darkB = 1,
 		darkA = 1,
-    })
+	})
 	Cartographer:RegisterDefaults("Foglight", "account", {
 		errata = {
 			["LochModan"] = {
@@ -1009,7 +1009,7 @@ function Cartographer_Foglight:WorldMapFrame_UpdateOverlays()
 				offsetY = 415
 			end
 		end
-
+		
 		local numTexturesWide = math_ceil(textureWidth / 256)
 		local numTexturesTall = math_ceil(textureHeight / 256)
 		local neededTextures = textureCount + numTexturesWide*numTexturesTall
@@ -1025,7 +1025,7 @@ function Cartographer_Foglight:WorldMapFrame_UpdateOverlays()
 			if j < numTexturesTall then
 				texturePixelHeight = 256
 				textureFileHeight = 256
-			else
+				else
 				texturePixelHeight = math_mod(textureHeight, 256)
 				if texturePixelHeight == 0 then
 					texturePixelHeight = 256
@@ -1044,7 +1044,7 @@ function Cartographer_Foglight:WorldMapFrame_UpdateOverlays()
 				if k < numTexturesWide then
 					texturePixelWidth = 256
 					textureFileWidth = 256
-				else
+					else
 					texturePixelWidth = math_mod(textureWidth, 256)
 					if texturePixelWidth == 0 then
 						texturePixelWidth = 256
@@ -1060,11 +1060,11 @@ function Cartographer_Foglight:WorldMapFrame_UpdateOverlays()
 				texture:ClearAllPoints()
 				texture:SetPoint("TOPLEFT", "WorldMapDetailFrame", "TOPLEFT", offsetX + (256 * (k-1)), -(offsetY + (256 * (j - 1))))
 				texture:SetTexture(textureName..(((j - 1) * numTexturesWide) + k))
-
+				
 				if discovered[tname] then
 					texture:SetVertexColor(1.0,1.0,1.0)
 					texture:SetAlpha(1.0)
-				else
+					else
 					texture:SetVertexColor(self.db.profile.darkR, self.db.profile.darkG, self.db.profile.darkB)
 					texture:SetAlpha(self.db.profile.darkA)
 				end

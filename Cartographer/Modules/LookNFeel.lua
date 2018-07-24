@@ -25,6 +25,8 @@ L:RegisterTranslations("enUS", function() return {
 	
 	["Shift-MouseWheel to change transparency"] = true,
 	["Ctrl-MouseWheel to change scale"] = true,
+	["Ctrl-Alt-MouseWheel to change note size"] = true,
+	["Ctrl-Left-Click to move map"] = true,
 	
 	["Lock the World Map"] = true,
 	
@@ -53,6 +55,8 @@ L:RegisterTranslations("ruRU", function() return {
 	
 	["Shift-MouseWheel to change transparency"] = "Shift+Колесо мыши - изменение прозрачности",
 	["Ctrl-MouseWheel to change scale"] = "Ctrl+Колесо мыши - изменение масштаба",
+	["Ctrl-Alt-MouseWheel to change note size"] = "Ctrl+Alt+Колесо мыши - изменение размера заметок",
+	["Ctrl-Left-Click to move map"] = "Ctrl+Левая кнопка мыши - перемещение карты",
 	
 	["Lock the World Map"] = "Закрепить карту мира",
 	
@@ -81,6 +85,8 @@ L:RegisterTranslations("koKR", function() return {
 	
 	["Shift-MouseWheel to change transparency"] = "Shift-스크롤 : 투명도 변경",
 	["Ctrl-MouseWheel to change scale"] = "Ctrl-스크롤 : 크기 변경",
+	["Ctrl-Alt-MouseWheel to change note size"] = "Ctrl-Alt-스크롤 : change note size", -- TODO
+	["Ctrl-Left-Click to move map"] = "Ctrl-왼쪽-클릭 : move map", -- TODO
 	
 	["Lock the World Map"] = "세계 지도의 위치를 잠금니다.",
 	
@@ -99,15 +105,15 @@ local math_mod = lua51 and math.fmod or math.mod
 
 local fake_ipairs = lua51 and loadstring([[local tmp = {}; return function(...)
 	for k in pairs(tmp) do
-		tmp[k] = nil
+	tmp[k] = nil
 	end
 	for i = 1, select('#', ...) do
-		tmp[i] = select(i, ...)
+	tmp[i] = select(i, ...)
 	end
 	return ipairs(tmp)
-end]])() or loadstring([[local tmp = {}; return function(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20)
+	end]])() or loadstring([[local tmp = {}; return function(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20)
 	for k in pairs(tmp) do
-		tmp[k] = nil
+	tmp[k] = nil
 	end
 	tmp[1] = a1
 	tmp[2] = a2
@@ -131,7 +137,7 @@ end]])() or loadstring([[local tmp = {}; return function(a1,a2,a3,a4,a5,a6,a7,a8
 	tmp[20] = a20
 	tmp.n = 20
 	while tmp[tmp.n] == nil do
-		tmp.n = tmp.n - 1
+	tmp.n = tmp.n - 1
 	end
 	return ipairs(tmp)
 end]])()
@@ -183,7 +189,7 @@ function Cartographer_LookNFeel:OnInitialize()
 				desc = L["Scale of the World Map"],
 				type = 'range',
 				min = 0.2,
-				max = 1,
+				max = 10, -- was 1
 				step = 0.05,
 				isPercent = true,
 				get = "GetScale",
@@ -267,10 +273,13 @@ local cities = {
 }
 
 function Cartographer_LookNFeel:OnEnable()
-	Cartographer:AddToMagnifyingGlass(L["Shift-MouseWheel to change transparency"])
+	
+	Cartographer:AddToMagnifyingGlass(L["Ctrl-Left-Click to move map"]) -- WHDB related
 	Cartographer:AddToMagnifyingGlass(L["Ctrl-MouseWheel to change scale"])
+	Cartographer:AddToMagnifyingGlass(L["Ctrl-Alt-MouseWheel to change note size"]) -- WHDB related
+	Cartographer:AddToMagnifyingGlass(L["Shift-MouseWheel to change transparency"])
 	UIPanelWindows["WorldMapFrame"] = nil
-	WorldMapFrame:SetFrameStrata("HIGH")
+	WorldMapFrame:SetFrameStrata("FULLSCREEN")
 	WorldMapFrame:EnableMouse(not self.db.profile.locked)
 	WorldMapFrame:EnableMouseWheel(not self.db.profile.locked)
 	WorldMapButton:EnableMouse(not self.db.profile.locked)
@@ -296,37 +305,101 @@ function Cartographer_LookNFeel:OnEnable()
 		this:ClearAllPoints()
 		this:SetPoint("CENTER", "UIParent", "CENTER", x, y)
 	end)
+	local isMoving = false; -- WHDB related
+	WorldMapButton:SetScript("OnMouseDown", function() -- WHDB related
+		if arg1 == "LeftButton" and IsControlKeyDown() then
+			WorldMapFrame:StartMoving();
+			isMoving = true;
+		end
+	end)
+	local oldOnMouseUp = WorldMapButton:GetScript("OnMouseUp"); -- WHDB related
+	WorldMapButton:SetScript("OnMouseUp", function() -- WHDB related
+		if arg1 == "LeftButton" and isMoving then
+			WorldMapFrame:StopMovingOrSizing();
+			isMoving = false;
+			else
+			oldOnMouseUp();
+		end
+	end)
 	WorldMapFrame:SetScript("OnMouseWheel", function()
 		local up = (arg1 == 1)
-		
-		if IsControlKeyDown() then
+		-- Change map, note and player arrow size
+		-- When map gets larger, notes and arrow get smaller. And vice versa.
+		if IsControlKeyDown() and not IsAltKeyDown() then
+			-- Calculate new scale
 			local scale = self:GetScale()
 			if up then
 				scale = scale + 0.1
-				if scale > 1 then
-					scale = 1
+				if scale > 7 then -- was 1
+					scale = 7; -- was 1
 				end
-			else
+				else
 				scale = scale - 0.1
 				if scale < 0.2 then
 					scale = 0.2
 				end
 			end
+			-- Save cursor coordinates
+			local x, y = GetCursorPosition();
+			local _, _, cx, cy = string.find(Cartographer_Coordinates.frame.cursorCoords:GetText(), ".+ (.+), (.+)")
+			cx = tonumber(cx);
+			cy = tonumber(cy);
+			-- Set new world map scale
 			self:SetScale(scale)
-		elseif IsShiftKeyDown() then
+			-- Calculate offsets relative to new size
+			local width, height = WorldMapDetailFrame:GetWidth(), WorldMapDetailFrame:GetHeight()
+			local newX = x/scale-10-((cx/100)*width); -- 10 is the offset between WorldMapFrame and WorldMapDetailFrame
+			local newY = y/scale+69+((cy/100)*height); -- 69 is the offset ...
+			-- Set new position
+			WorldMapFrame:ClearAllPoints();
+			WorldMapFrame:SetPoint("TOPLEFT", "UIParent", "BOTTOMLEFT", newX, newY);
+			-- Resize notes and player arrow
+			local size = 1/scale;
+			Cartographer_Notes:SetIconSize(size);
+			if self.db.profile.largePlayer then
+				size = size*1.5;
+			end
+			if size > 2.5 then
+				size = 2.5;
+			end
+			self.playerModel:SetModelScale(size);
+			-- Change transparency
+			elseif IsShiftKeyDown() then
 			local alpha = self:GetAlpha()
 			if up then
 				alpha = alpha + 0.1
 				if alpha > 1 then
 					alpha = 1
 				end
-			else
+				else
 				alpha = alpha - 0.1
 				if alpha < 0 then
 					alpha = 0
 				end
 			end
 			self:SetAlpha(alpha)
+			-- Change note and player arrow size
+			elseif IsAltKeyDown() and IsControlKeyDown() then
+			local size = Cartographer_Notes:GetIconSize()
+			if up then
+				size = size + 0.05
+				if size > 5 then
+					size = 5;
+				end
+				else
+				size = size - 0.05
+				if size < 0.05 then
+					size = 0.05;
+				end
+			end
+			Cartographer_Notes:SetIconSize(size)
+			if self.db.profile.largePlayer then
+				size = size*1.5;
+			end
+			if size > 2.5 then
+				size = 2.5;
+			end
+			self.playerModel:SetModelScale(size);
 		end
 	end)
 	WorldMapFrame:SetResizable(true)
@@ -372,10 +445,11 @@ function Cartographer_LookNFeel:OnEnable()
 		end
 	end
 	self.playerModel:SetAlpha(self.db.profile.overlayAlpha)
+	self.playerModel:SetFrameLevel(11); -- WHDB related. Player Arrow > Normal notes. Not working right, need to investigate.
 	
 	if (GetCurrentMapZone() == 0 or cities[GetMapInfo()]) and self.db.profile.overlayAlpha > self.db.profile.alpha then
 		WorldMapDetailFrame:SetAlpha(self.db.profile.overlayAlpha)
-	else
+		else
 		WorldMapDetailFrame:SetAlpha(self.db.profile.alpha)
 	end
 	
@@ -401,11 +475,18 @@ function Cartographer_LookNFeel:OnEnable()
 	WorldMapButton:SetScript("OnLeave", f)
 	if MouseIsOver(WorldMapButton) and not Cartographer:GetCurrentInstance() then
 		WorldMapFrameAreaLabel:Show()
-	else
+		else
 		WorldMapFrameAreaLabel:Hide()
 	end
 	
-	self.playerModel:SetModelScale(self.db.profile.largePlayer and 1.5 or 1)
+	local size = Cartographer_Notes:GetIconSize(); -- WHDB related.
+	if self.db.profile.largePlayer then
+		size = size*1.5;
+	end
+	if size > 2.5 then
+		size = 2.5;
+	end
+	self.playerModel:SetModelScale(size);
 	
 	if WorldMapFrame:IsShown() then
 		ToggleWorldMap()
@@ -466,7 +547,7 @@ function Cartographer_LookNFeel:MODIFIER_STATE_CHANGED()
 			WorldMapFrame:EnableMouseWheel(true)
 			WorldMapButton:EnableMouse(true)
 			WorldMapMagnifyingGlassButton:EnableMouse(true)
-		else
+			else
 			WorldMapFrame:EnableMouse(false)
 			WorldMapFrame:EnableMouseWheel(false)
 			WorldMapButton:EnableMouse(false)
@@ -494,7 +575,7 @@ if lua51 then
 		end
 		return found
 	end
-else
+	else
 	function Cartographer_LookNFeel:CloseWindows()
 		local found = self.hooks.CloseWindows()
 		if self.db.profile.useEscape then
@@ -589,7 +670,7 @@ function Cartographer_LookNFeel:Cartographer_ChangeZone(zone)
 		tex:SetPoint(WorldMapDetailTile12:GetPoint(1))
 		tex:SetTexture(WorldMapDetailTile12:GetTexture())
 		dirty = true
-	elseif zone == "Arathi Basin" then
+		elseif zone == "Arathi Basin" then
 		WorldMapDetailTile1:Hide()
 		WorldMapDetailTile4:Hide()
 		WorldMapDetailTile5:Hide()
@@ -623,7 +704,7 @@ function Cartographer_LookNFeel:Cartographer_ChangeZone(zone)
 		tex:SetPoint(WorldMapDetailTile12:GetPoint(1))
 		tex:SetTexture(WorldMapDetailTile12:GetTexture())
 		dirty = true
-	elseif zone == "Alterac Valley" then
+		elseif zone == "Alterac Valley" then
 		WorldMapDetailTile1:Hide()
 		WorldMapDetailTile4:Hide()
 		WorldMapDetailTile5:Hide()
@@ -700,7 +781,7 @@ function Cartographer_LookNFeel:Cartographer_ChangeZone(zone)
 		tex:SetTexture(WorldMapDetailTile11:GetTexture())
 		
 		dirty = true
-	elseif zone == "Eye of the Storm" then
+		elseif zone == "Eye of the Storm" then
 		WorldMapDetailTile1:Hide()
 		WorldMapDetailTile4:Hide()
 		WorldMapDetailTile5:Hide()
@@ -821,14 +902,14 @@ function Cartographer_LookNFeel:SetAlpha(value)
 		WorldMapFrame:SetAlpha(value)
 		if (GetCurrentMapZone() == 0 or cities[GetMapInfo()]) and self.db.profile.overlayAlpha > value then
 			WorldMapDetailFrame:SetAlpha(self.db.profile.overlayAlpha)
-		else
+			else
 			WorldMapDetailFrame:SetAlpha(value)
 		end
 		for i = 13, 1000 do
 			local tex = _G["WorldMapDetailTile" .. i]
 			if tex then
 				tex:SetAlpha(value)
-			else
+				else
 				break
 			end
 		end
@@ -853,14 +934,14 @@ function Cartographer_LookNFeel:SetOverlayAlpha(value)
 	if Cartographer:IsModuleActive(self) then
 		if (GetCurrentMapZone() == 0 or cities[GetMapInfo()]) and value > self.db.profile.alpha then
 			WorldMapDetailFrame:SetAlpha(value)
-		else
+			else
 			WorldMapDetailFrame:SetAlpha(self.db.profile.alpha)
 		end
 		for i = 13, 1000 do
 			local tex = _G["WorldMapDetailTile" .. i]
 			if tex then
 				tex:SetAlpha(self.db.profile.alpha)
-			else
+				else
 				break
 			end
 		end
@@ -941,8 +1022,14 @@ function Cartographer_LookNFeel:ToggleLargePlayerPOI(value)
 		value = not self.db.profile.useEscape
 	end
 	self.db.profile.largePlayer = value
-	
-	self.playerModel:SetModelScale(value and 1.5 or 1)
+	local size = Cartographer_Notes:GetIconSize(); -- WHDB related.
+	if self.db.profile.largePlayer then
+		size = size*1.5;
+	end
+	if size > 2.5 then
+		size = 2.5;
+	end
+	self.playerModel:SetModelScale(size);
 end
 
 function Cartographer_LookNFeel:OnProfileEnable()

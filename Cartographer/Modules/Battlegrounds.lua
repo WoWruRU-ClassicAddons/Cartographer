@@ -18,13 +18,13 @@ L:RegisterTranslations("ruRU", function() return {
 } end)
 
 L:RegisterTranslations("deDE", function() return {
---	["Battlegrounds"] = true,
---	["Module which provides maps of battlegrounds."] = true,
+	--    ["Battlegrounds"] = true,
+	--    ["Module which provides maps of battlegrounds."] = true,
 } end)
 
 L:RegisterTranslations("frFR", function() return {
---	["Battlegrounds"] = true,
---	["Module which provides maps of battlegrounds."] = true,
+	--    ["Battlegrounds"] = true,
+	--    ["Module which provides maps of battlegrounds."] = true,
 } end)
 
 L:RegisterTranslations("koKR", function() return {
@@ -33,13 +33,13 @@ L:RegisterTranslations("koKR", function() return {
 } end)
 
 L:RegisterTranslations("zhTW", function() return {
---	["Battlegrounds"] = true,
---	["Module which provides maps of battlegrounds."] = true,
+	--    ["Battlegrounds"] = true,
+	--    ["Module which provides maps of battlegrounds."] = true,
 } end)
 
 L:RegisterTranslations("zhCN", function() return {
---	["Battlegrounds"] = true,
---	["Module which provides maps of battlegrounds."] = true,
+	--    ["Battlegrounds"] = true,
+	--    ["Module which provides maps of battlegrounds."] = true,
 } end)
 
 Cartographer_Battlegrounds = Cartographer:NewModule("Battlegrounds", "AceHook-2.1", "AceEvent-2.0")
@@ -109,13 +109,13 @@ function Cartographer_Battlegrounds:ShowBattleground(name)
 	local realName = name
 	if name == "Warsong Gulch" then
 		name = "WarsongGulch"
-	elseif name == "Arathi Basin" then
+		elseif name == "Arathi Basin" then
 		name = "ArathiBasin"
-	elseif name == "Alterac Valley" then
+		elseif name == "Alterac Valley" then
 		name = "AlteracValley"
-	elseif lua51 and name == "Eye of the Storm" then
+		elseif lua51 and name == "Eye of the Storm" then
 		name = "NetherstormArena"
-	else
+		else
 		error(string.format("Cannot show unknown battleground %q", name), 2)
 	end
 	self.hooks.SetMapZoom(-1, nil)
