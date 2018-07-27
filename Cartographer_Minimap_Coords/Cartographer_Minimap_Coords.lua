@@ -1,9 +1,9 @@
-﻿local Tablet = AceLibrary("Tablet-2.0")
-local L = AceLibrary("AceLocale-2.2"):new("Cartographer_MiniMapCoords")
-local AceOO = AceLibrary("AceOO-2.0")
+﻿local L = AceLibrary("AceLocale-2.2"):new("Cartographer_MiniMapCoords")
 
 L:RegisterTranslations("enUS", function() return {
 	["MiniMap Coords"] = true,
+	["Active"] = true,
+	["Suspend/resume this module."] = true,
 	["Show Background"] = true,
 	["Show Border"] = true,
 	["Reset Position"] = true,
@@ -17,6 +17,8 @@ L:RegisterTranslations("enUS", function() return {
 
 L:RegisterTranslations("ruRU", function() return {
 	["MiniMap Coords"] = "Координаты",
+	["Active"] = "Активен",
+	["Suspend/resume this module."] = "Приостановить/Возобновить этот модуль",
 	["Show Background"] = "Показать фон",
 	["Show Border"] = "Показать бордюр",
 	["Reset Position"] = "Сброс позиции",
